@@ -2,7 +2,7 @@ import numpy as np
 from scipy import linalg
 
 class MlFactorAnalysis(object):
-    def __init__(self, n_factors, sample_size):
+    def __init__(self, n_factors, sample_size, init_params):
         """
             number of variables = p
             n_factors = q
@@ -12,6 +12,7 @@ class MlFactorAnalysis(object):
         self.iterations = 0
         self.delta = 0.001
         self.n = sample_size
+        self.init_params = init_params
 
     def objective(self, cyy, lambdas, taus):
         return -0.5 * self.n * ( np.log(linalg.det(taus + np.transpose(lambdas).dot(lambdas))) + np.trace(np.dot(cyy, self.woodbury(lambdas, taus))) )
@@ -26,7 +27,7 @@ class MlFactorAnalysis(object):
 
     def fit(self, cyy):
         #set initial value of ll, lambdas, taus
-        lambdas, taus = set_initial(cyy)
+        lambdas, taus = self.set_initial(cyy)
         ll = self.objective(cyy, lambdas, taus)
         #while loop until abs(ll* - ll) < delta
         while True:
@@ -54,14 +55,19 @@ class MlFactorAnalysis(object):
         left = taus_inv.dot(np.transpose(lambdas))
         return taus_inv - left.dot( linalg.inv(np.identity(self.num_fators) + np.dot(lambdas,taus_inv).dot(np.transpose(lambdas))) ).dot(np.transpose(left))
 
-    def set_initial(cyy):
+    def set_initial(self, cyy):
         """
             set initial value of params
         """
         print "Need lambdas to be %d*%d matrix" %(self.num_fators, cyy.shape[0])
-        lambdas = np.array([0.7, 0.7])
-        taus = np.diag([0.06,0.06])
+        lambdas = self.lambdas
+        taus = self.taus
         return lambdas, taus
 
 if __name__ == "__main__":
-    mlfa = MlFactorAnalysis(1,20)
+    #read params from file
+    init_params = {}
+    init_params["lambdas"] = np.array([[0.7, 0.7]])
+    init_params["taus"] = np.diag([0.06,0.06])
+
+    mlfa = MlFactorAnalysis(1,20, init_params)
