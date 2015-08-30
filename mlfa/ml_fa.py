@@ -1,4 +1,5 @@
 import numpy as np
+from utils import *
 from scipy import linalg
 
 class MlFactorAnalysis(object):
@@ -15,13 +16,13 @@ class MlFactorAnalysis(object):
         self.init_params = init_params
 
     def objective(self, cyy, lambdas, taus):
-        return -0.5 * self.n * ( np.log(linalg.det(taus + np.transpose(lambdas).dot(lambdas))) + np.trace(np.dot(cyy, self.woodbury(lambdas, taus))) )
+        return -0.5 * self.n * ( np.log(linalg.det(taus + np.transpose(lambdas).dot(lambdas))) + np.trace(np.dot(cyy, woodbury(lambdas, taus))) )
 
     def iterative_step(self, cyy, lambdas, taus):
         """
             update params iteratively
         """
-        new_lambdas = lambdas.dot(self.woodbury(lambdas, taus)).dot(cyy)
+        new_lambdas = lambdas.dot(woodbury(lambdas, taus)).dot(cyy)
         new_taus = np.diag( np.diag( cyy - np.transpose(new_lambdas).dot(new_lambdas) ) )
         return new_lambdas, new_taus
 
@@ -46,22 +47,13 @@ class MlFactorAnalysis(object):
                 taus = new_taus
                 ll = new_ll
 
-
-    def woodbury(self, lambdas, taus):
-        """
-            woodbury identity util function for inv(taus + transpose(lambdas)*lambdas)
-        """
-        taus_inv = linalg.inv(taus)
-        left = taus_inv.dot(np.transpose(lambdas))
-        return taus_inv - left.dot( linalg.inv(np.identity(self.num_fators) + np.dot(lambdas,taus_inv).dot(np.transpose(lambdas))) ).dot(np.transpose(left))
-
     def set_initial(self, cyy):
         """
             set initial value of params
         """
         print "Need lambdas to be %d*%d matrix" %(self.num_fators, cyy.shape[0])
-        lambdas = self.lambdas
-        taus = self.taus
+        lambdas = self.init_params["lambdas"]
+        taus = self.init_params["taus"]
         return lambdas, taus
 
 if __name__ == "__main__":
