@@ -4,12 +4,20 @@
 		"selected_items":
 		[
 			[
-				"ini",
-				"init_params"
+				"new",
+				"new_S_inv"
 			],
 			[
-				"new",
-				"new_ll"
+				"new_",
+				"new_taus"
+			],
+			[
+				"fa",
+				"factor_pattern"
+			],
+			[
+				"ini",
+				"init_params"
 			],
 			[
 				"iter",
@@ -43,7 +51,7 @@
 			"file": "test/mlfa_test.py",
 			"settings":
 			{
-				"buffer_size": 733,
+				"buffer_size": 751,
 				"line_ending": "Unix"
 			}
 		},
@@ -51,7 +59,15 @@
 			"file": "mlfa/ml_fa.py",
 			"settings":
 			{
-				"buffer_size": 2641,
+				"buffer_size": 2255,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test/emmlfa_test.py",
+			"settings":
+			{
+				"buffer_size": 2594,
 				"line_ending": "Unix"
 			}
 		},
@@ -59,7 +75,15 @@
 			"file": "emmlfa/emmlfa.py",
 			"settings":
 			{
-				"buffer_size": 1498,
+				"buffer_size": 3089,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "mlfa/utils.py",
+			"settings":
+			{
+				"buffer_size": 652,
 				"line_ending": "Unix"
 			}
 		}
@@ -113,9 +137,10 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 100.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -123,6 +148,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"if",
+			"self.woodbury",
 			"woodbury",
 			"5",
 			"pydub",
@@ -134,6 +161,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"woodbury"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -144,6 +172,7 @@
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -151,15 +180,15 @@
 					"file": "test/mlfa_test.py",
 					"settings":
 					{
-						"buffer_size": 733,
+						"buffer_size": 751,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								327,
-								300
+								135,
+								751
 							]
 						],
 						"settings":
@@ -180,15 +209,15 @@
 					"file": "mlfa/ml_fa.py",
 					"settings":
 					{
-						"buffer_size": 2641,
+						"buffer_size": 2255,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								826,
-								826
+								63,
+								63
 							]
 						],
 						"settings":
@@ -197,7 +226,7 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 4.0,
+						"translation.x": 7.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -205,18 +234,49 @@
 				},
 				{
 					"buffer": 2,
-					"file": "emmlfa/emmlfa.py",
+					"file": "test/emmlfa_test.py",
 					"settings":
 					{
-						"buffer_size": 1498,
+						"buffer_size": 2594,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								572,
-								572
+								1415,
+								1415
+							],
+							[
+								2021,
+								2021
+							]
+						],
+						"settings":
+						{
+							"_anf_new": "",
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 255.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "emmlfa/emmlfa.py",
+					"settings":
+					{
+						"buffer_size": 3089,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2143,
+								2143
 							]
 						],
 						"settings":
@@ -227,7 +287,34 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 274.0,
+						"translation.y": 858.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "mlfa/utils.py",
+					"settings":
+					{
+						"buffer_size": 652,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								81,
+								81
+							]
+						],
+						"settings":
+						{
+							"_anf_new": "",
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 1.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
