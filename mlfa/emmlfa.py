@@ -30,7 +30,7 @@ class EMMlFactorAnalysis(object):
         K = woodbury(lambdas, taus).dot(np.transpose(lambdas))
         B = cyy.dot(K)
         S = np.transpose(K).dot(B) + np.identity(lambdas.shape[0]) - lambdas.dot(K)
-        #need filter for confirmatory FA
+
         if self.type == "confirmatory":
             new_lambdas = np.zeros(lambdas.shape)
             new_taus_array = np.zeros(len(taus))
@@ -46,8 +46,6 @@ class EMMlFactorAnalysis(object):
                 new_taus_array[j] = np.diag(cyy)[j] - new_B.dot(l)
 
             new_taus = np.diag(new_taus_array)
-
-
         else:
             new_lambdas = linalg.inv(S).dot(np.transpose(B))
             new_taus = np.diag(np.diag(cyy - B.dot(new_lambdas)))
@@ -101,8 +99,8 @@ class EMMlFactorAnalysis(object):
             #print "Likelihood = %f" % (new_ll)
             #print
 
-            if abs(ll - new_ll) < self.delta:
-            #if self.iterations == 50:
+            #if abs(ll - new_ll) < self.delta:
+            if self.iterations == 50:
                 break
             else:
                 lambdas = new_lambdas
@@ -113,7 +111,7 @@ class EMMlFactorAnalysis(object):
         plt.plot(x, np.log(lls), color='b')
         plt.xlabel('Iterations')
         plt.ylabel('log(-f(betas, taus))')
-        plt.savefig(os.path.join('.', "exploratory_EM.png"), bbox_inches="tight")
+        plt.savefig(os.path.join('.', "confirmatory_EM.png"), bbox_inches="tight")
 
 
 
@@ -135,6 +133,14 @@ if __name__ == "__main__":
                                        [0.00, 0.00, 0.00, 0.00, 0.37, 0.15, 0.35, 0.02,-0.12]])
 
     init_params["taus"] = np.diag([0.48, 0.41, 0.09, 0.31, 0.44, 0.46, 0.52, 0.32, 0.32])
+    init_params["factor_pattern"] = np.array([[1,1,1,1,1,1,1,1,1],
+                                              [1,1,1,1,1,1,1,1,1],
+                                              [1,1,1,1,0,0,0,0,0],
+                                              [0,0,0,0,1,1,1,1,1]])
 
-    emmlfa = EMMlFactorAnalysis(4,100, init_params)
-    emmlfa.plot_learning_curve(cyy)
+    #emmlfa = EMMlFactorAnalysis(4,100, init_params)
+    #emmlfa.plot_learning_curve(cyy)
+
+    confir = EMMlFactorAnalysis(4,100,init_params,fa_type="confirmatory")
+    confir.plot_learning_curve(cyy)
+
