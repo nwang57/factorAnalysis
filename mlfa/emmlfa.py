@@ -5,7 +5,7 @@ import os
 import matplotlib.pyplot as plt
 
 class EMMlFactorAnalysis(object):
-    def __init__(self,n_factors, sample_size, init_params, fa_type="explore"):
+    def __init__(self,n_factors, sample_size, init_params, fa_type="explore", plot=True):
         """
             number of variables = p
             n_factors = q
@@ -17,24 +17,22 @@ class EMMlFactorAnalysis(object):
         self.n = sample_size
         self.init_params = init_params
         self.type = fa_type
+        self.set_initial()
+        self.plot = plot
+        self.ll = []
 
-    def objective(self, cyy, lambdas, taus):
-        M = cyy.dot(woodbury(lambdas, taus))
-        return -(np.log(linalg.det(M)) - np.trace(M) + 9)
 
 
-    def sig_tilt(self, lambdas, taus):
-        return taus + np.transpose(lambdas).dot(lambdas)
 
-    def iterative_step(self, cyy, lambdas, taus, factor_pattern):
-        K = woodbury(lambdas, taus).dot(np.transpose(lambdas))
+    def iterative_step(self, cyy):
+        K = woodbury(self.lambdas, self.taus).dot(np.transpose(self.lambdas))
         B = cyy.dot(K)
-        S = np.transpose(K).dot(B) + np.identity(lambdas.shape[0]) - lambdas.dot(K)
+        S = np.transpose(K).dot(B) + np.identity(self.lambdas.shape[0]) - self.lambdas.dot(K)
 
         if self.type == "confirmatory":
-            new_lambdas = np.zeros(lambdas.shape)
-            new_taus_array = np.zeros(len(taus))
-            for j, pattern in enumerate(factor_pattern):
+            new_lambdas = np.zeros(self.lambdas.shape)
+            new_taus_array = np.zeros(len(self.taus))
+            for j, pattern in enumerate(self.factor_pattern):
                 #for each varaible j
                 new_S = S[pattern,:][:,pattern]
                 new_B = B[j,pattern]
@@ -50,68 +48,54 @@ class EMMlFactorAnalysis(object):
             new_lambdas = linalg.inv(S).dot(np.transpose(B))
             new_taus = np.diag(np.diag(cyy - B.dot(new_lambdas)))
 
-        return new_lambdas, new_taus
+        self.lambdas, self.taus = new_lambdas, new_taus
 
-    def fit(self, cyy):
-        lambdas, taus, factor_pattern = self.set_initial(cyy)
-        while True:
-            new_lambdas, new_taus = self.iterative_step(cyy, lambdas, taus, factor_pattern)
-            self.iterations += 1
-
-            #print "Num iterations: %d" % (self.iterations)
-            #print "Likelihood = %f" % (new_ll)
-            #print
-
-            if np.mean(abs(np.diag(new_taus - taus))) < self.delta:
-            #if self.iterations == 50:
-                return new_lambdas, new_taus
-            else:
-                lambdas = new_lambdas
-                taus = new_taus
-
-
-    def set_initial(self, cyy):
+    def set_initial(self):
         """
             set initial value of params
         """
-        print "Need lambdas to be %d*%d matrix" %(self.num_fators, cyy.shape[0])
-        lambdas = self.init_params["lambdas"]
-        taus = self.init_params["taus"]
+        if self.num_fators != self.init_params["lambdas"].shape[0]:
+            raise Exception("number of factors does not match the dimension of loadings")
+
+        self.lambdas = self.init_params["lambdas"]
+        self.taus = self.init_params["taus"]
         if self.type == "confirmatory":
-            factor_pattern = get_index_from_factor_pattern(self.init_params["factor_pattern"])
+            self.factor_pattern = get_index_from_factor_pattern(self.init_params["factor_pattern"])
         else:
-            factor_pattern = None
-        return lambdas, taus, factor_pattern
+            self.factor_pattern = None
 
-    def test_iterations(self, cyy, lambdas, taus, factor_pattern):
-        l , t = self.iterative_step(cyy, lambdas, taus, factor_pattern)
-        return l, t, self.objective(cyy, l, t)
+    def test_iterations(self, cyy):
+        self.iterative_step(cyy)
+        return objective(cyy, self.lambdas, self.taus)
 
-    def plot_learning_curve(self, cyy):
-        lambdas, taus, factor_pattern = self.set_initial(cyy)
-        ll = self.objective(cyy, lambdas, taus)
+    def fit(self, cyy):
+        ll = objective(cyy, self.lambdas, self.taus)
         lls = [ll]
         while True:
-            new_lambdas, new_taus, new_ll = self.test_iterations(cyy, lambdas, taus, factor_pattern)
+            new_ll = self.test_iterations(cyy)
             self.iterations += 1
             lls.append(new_ll)
             #print "Num iterations: %d" % (self.iterations)
             #print "Likelihood = %f" % (new_ll)
             #print
 
-            #if abs(ll - new_ll) < self.delta:
-            if self.iterations == 50:
+            if abs(ll - new_ll) < self.delta:
+            #if self.iterations == 50:
                 break
             else:
-                lambdas = new_lambdas
-                taus = new_taus
                 ll = new_ll
 
-        x = np.arange(0, self.iterations + 1)
-        plt.plot(x, np.log(lls), color='b')
-        plt.xlabel('Iterations')
-        plt.ylabel('log(-f(betas, taus))')
-        plt.savefig(os.path.join('.', "confirmatory_EM.png"), bbox_inches="tight")
+        if self.plot:
+            x = np.arange(0, self.iterations + 1)
+            plt.plot(x, np.log(lls), color='b')
+            plt.xlabel('Iterations')
+            plt.ylabel('log(-f(betas, taus))')
+            if self.type == "confirmatory":
+                plt.savefig(os.path.join('.', "confirmatory_EM.png"), bbox_inches="tight")
+            else:
+                plt.savefig(os.path.join('.', "explore_EM.png"), bbox_inches="tight")
+
+        self.ll = lls
 
 
 
@@ -119,7 +103,7 @@ if __name__ == "__main__":
     #read params from file
     cyy = np.array([[1.0   ,0.554 ,0.227 ,0.189 ,0.461 ,0.506 ,0.408, 0.280 ,0.241],
                     [0.554 ,1.0   ,0.296 ,0.219 ,0.479 ,0.530 ,0.425, 0.311 ,0.311],
-                    [0.277 ,0.296 ,1.0   ,0.769 ,0.237 ,0.243 ,0.304, 0.718 ,0.730],
+                    [0.227 ,0.296 ,1.0   ,0.769 ,0.237 ,0.243 ,0.304, 0.718 ,0.730],
                     [0.189 ,0.219 ,0.769 ,1.0   ,0.212 ,0.226 ,0.291, 0.681 ,0.661],
                     [0.461 ,0.479 ,0.237 ,0.212 ,1.0   ,0.520 ,0.514, 0.313 ,0.245],
                     [0.506 ,0.530 ,0.243 ,0.226 ,0.520 ,1.0   ,0.473, 0.348 ,0.290],
@@ -138,9 +122,9 @@ if __name__ == "__main__":
                                               [1,1,1,1,0,0,0,0,0],
                                               [0,0,0,0,1,1,1,1,1]])
 
-    #emmlfa = EMMlFactorAnalysis(4,100, init_params)
-    #emmlfa.plot_learning_curve(cyy)
+    emmlfa = EMMlFactorAnalysis(4,100, init_params)
+    emmlfa.fit(cyy)
 
-    confir = EMMlFactorAnalysis(4,100,init_params,fa_type="confirmatory")
-    confir.plot_learning_curve(cyy)
+    #confir = EMMlFactorAnalysis(4,100,init_params,fa_type="confirmatory")
+    #confir.fit(cyy)
 

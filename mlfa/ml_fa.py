@@ -75,7 +75,7 @@ class MlFactorAnalysis(object):
                 taus = new_taus
                 ll = new_ll
         x = np.arange(0, self.iterations + 1)
-        plt.plot(x, np.log(lls), color='b')9
+        plt.plot(x, np.log(lls), color='b')
         plt.xlabel('Iterations')
         plt.ylabel('log(-f(betas, taus))')
         plt.savefig(os.path.join('.', "explore_ML.png"), bbox_inches="tight")
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #read params from file
     cyy = np.array([[1.0   ,0.554 ,0.227 ,0.189 ,0.461 ,0.506 ,0.408, 0.280 ,0.241],
                     [0.554 ,1.0   ,0.296 ,0.219 ,0.479 ,0.530 ,0.425, 0.311 ,0.311],
-                    [0.277 ,0.296 ,1.0   ,0.769 ,0.237 ,0.243 ,0.304, 0.718 ,0.730],
+                    [0.227 ,0.296 ,1.0   ,0.769 ,0.237 ,0.243 ,0.304, 0.718 ,0.730],
                     [0.189 ,0.219 ,0.769 ,1.0   ,0.212 ,0.226 ,0.291, 0.681 ,0.661],
                     [0.461 ,0.479 ,0.237 ,0.212 ,1.0   ,0.520 ,0.514, 0.313 ,0.245],
                     [0.506 ,0.530 ,0.243 ,0.226 ,0.520 ,1.0   ,0.473, 0.348 ,0.290],

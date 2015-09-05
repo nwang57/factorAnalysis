@@ -16,3 +16,9 @@ def get_index_from_factor_pattern(pattern):
     """
     return [[i for i, v in enumerate(row) if v ] for row in np.transpose(pattern)]
 
+def objective(cyy, lambdas, taus):
+    M = cyy.dot(woodbury(lambdas, taus))
+    return -(np.log(linalg.det(M)) - np.trace(M) + 9)
+
+def sig_tilt(lambdas, taus):
+    return taus + np.transpose(lambdas).dot(lambdas)
