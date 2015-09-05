@@ -3,10 +3,11 @@ from utils import *
 from scipy import linalg
 import os
 import matplotlib.pyplot as plt
+import pdb
 
 
 class MlFactorAnalysis(object):
-    def __init__(self, n_factors, sample_size, init_params):
+    def __init__(self,n_factors, sample_size, init_params, fa_type="explore", plot=True):
         """
             number of variables = p
             n_factors = q
@@ -17,50 +18,55 @@ class MlFactorAnalysis(object):
         self.delta = 1E-6
         self.n = sample_size
         self.init_params = init_params
+        self.type = fa_type
+        self.set_initial()
+        self.plot = plot
+        self.ll = []
 
-    def objective(self, cyy, lambdas, taus):
-        M = cyy.dot(woodbury(lambdas, taus))
-        return -(np.log(linalg.det(M)) - np.trace(M) + 9)
+    def set_initial(self):
+        """
+            set initial value of params
+        """
+        if self.num_fators != self.init_params["lambdas"].shape[0]:
+            raise Exception("number of factors does not match the dimension of loadings")
 
-    def iterative_step(self, cyy, lambdas, taus):
+        self.lambdas = self.init_params["lambdas"]
+        self.taus = self.init_params["taus"]
+        if self.type == "confirmatory":
+            self.factor_pattern = get_index_from_factor_pattern(self.init_params["factor_pattern"])
+        else:
+            self.factor_pattern = None
+
+    def iterative_step(self, cyy):
         """
             update params iteratively
         """
-        new_lambdas = lambdas.dot(woodbury(lambdas, taus)).dot(cyy)
-        new_taus = np.diag( np.diag( cyy - np.transpose(new_lambdas).dot(new_lambdas) ) )
-        return new_lambdas, new_taus
+        K  = self.lambdas.dot(woodbury(self.lambdas, self.taus)).dot(cyy)
+        if self.type == "confirmatory":
+            new_lambdas = np.zeros(self.lambdas.shape)
+            new_taus_array = np.zeros(len(self.taus))
+            for j, pattern in enumerate(self.factor_pattern):
+                #pdb.set_trace()
+                for l_elem, pos in zip(K[pattern,j], pattern):
+                    new_lambdas[:, j][pos] = l_elem
+
+                new_taus_array[j] = np.diag(cyy)[j] - np.transpose(K[pattern,j]).dot(K[pattern,j])
+
+            new_taus = np.diag(new_taus_array)
+        else:
+            new_lambdas = K
+            new_taus = np.diag( np.diag( cyy - np.transpose(new_lambdas).dot(new_lambdas) ) )
+        self.lambdas, self.taus = new_lambdas, new_taus
+
+    def test_iterations(self, cyy):
+        self.iterative_step(cyy)
+        return objective(cyy, self.lambdas, self.taus)
 
     def fit(self, cyy):
-        #set initial value of ll, lambdas, taus
-        lambdas, taus = self.set_initial(cyy)
-        ll = self.objective(cyy, lambdas, taus)
-        #while loop until abs(ll* - ll) < delta
-        while True:
-            new_lambdas, new_taus = self.iterative_step(cyy, lambdas, taus)
-            new_ll = self.objective(cyy, new_lambdas, new_taus)
-            self.iterations += 1
-
-            print "Num iterations: %d" % (self.iterations)
-            print "Likelihood = %f" % (new_ll)
-            print
-
-            if self.iterations >=1000 or abs(new_ll - ll) < self.delta:
-                return new_ll, new_lambdas, new_taus
-            else:
-                lambdas = new_lambdas
-                taus = new_taus
-                ll = new_ll
-
-    def test_iterations(self, cyy, lambdas, taus):
-        l , t = self.iterative_step(cyy, lambdas, taus)
-        return l, t, self.objective(cyy, l, t)
-
-    def plot_learning_curve(self, cyy):
-        lambdas, taus = self.set_initial(cyy)
-        ll = self.objective(cyy, lambdas, taus)
+        ll = objective(cyy, self.lambdas, self.taus)
         lls = [ll]
         while True:
-            new_lambdas, new_taus, new_ll = self.test_iterations(cyy, lambdas, taus)
+            new_ll = self.test_iterations(cyy)
             self.iterations += 1
             lls.append(new_ll)
             #print "Num iterations: %d" % (self.iterations)
@@ -71,23 +77,20 @@ class MlFactorAnalysis(object):
             #if self.iterations == 50:
                 break
             else:
-                lambdas = new_lambdas
-                taus = new_taus
                 ll = new_ll
-        x = np.arange(0, self.iterations + 1)
-        plt.plot(x, np.log(lls), color='b')
-        plt.xlabel('Iterations')
-        plt.ylabel('log(-f(betas, taus))')
-        plt.savefig(os.path.join('.', "explore_ML.png"), bbox_inches="tight")
 
-    def set_initial(self, cyy):
-        """
-            set initial value of params
-        """
-        print "Need lambdas to be %d*%d matrix" %(self.num_fators, cyy.shape[0])
-        lambdas = self.init_params["lambdas"]
-        taus = self.init_params["taus"]
-        return lambdas, taus
+        if self.plot:
+            x = np.arange(0, self.iterations + 1)
+            plt.plot(x, np.log(lls), color='b')
+            plt.xlabel('Iterations')
+            plt.ylabel('log(-f(betas, taus))')
+            if self.type == "confirmatory":
+                plt.savefig(os.path.join('.', "confirmatory_ML.png"), bbox_inches="tight")
+            else:
+                plt.savefig(os.path.join('.', "explore_ML.png"), bbox_inches="tight")
+
+        self.ll = lls
+
 
 if __name__ == "__main__":
     #read params from file
@@ -107,6 +110,13 @@ if __name__ == "__main__":
                                        [0.00, 0.00, 0.00, 0.00, 0.37, 0.15, 0.35, 0.02,-0.12]])
 
     init_params["taus"] = np.diag([0.48, 0.41, 0.09, 0.31, 0.44, 0.46, 0.52, 0.32, 0.32])
+    init_params["factor_pattern"] = np.array([[1,1,1,1,1,1,1,1,1],
+                                              [1,1,1,1,1,1,1,1,1],
+                                              [1,1,1,1,0,0,0,0,0],
+                                              [0,0,0,0,1,1,1,1,1]])
 
-    mlfa = MlFactorAnalysis(4,100, init_params)
-    mlfa.plot_learning_curve(cyy)
+    #mlfa = MlFactorAnalysis(4,100, init_params)
+    #mlfa.fit(cyy)
+
+    confir = MlFactorAnalysis(4,100, init_params, fa_type = "confirmatory")
+    confir.fit(cyy)

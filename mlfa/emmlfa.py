@@ -21,8 +21,19 @@ class EMMlFactorAnalysis(object):
         self.plot = plot
         self.ll = []
 
+    def set_initial(self):
+        """
+            set initial value of params
+        """
+        if self.num_fators != self.init_params["lambdas"].shape[0]:
+            raise Exception("number of factors does not match the dimension of loadings")
 
-
+        self.lambdas = self.init_params["lambdas"]
+        self.taus = self.init_params["taus"]
+        if self.type == "confirmatory":
+            self.factor_pattern = get_index_from_factor_pattern(self.init_params["factor_pattern"])
+        else:
+            self.factor_pattern = None
 
     def iterative_step(self, cyy):
         K = woodbury(self.lambdas, self.taus).dot(np.transpose(self.lambdas))
@@ -49,20 +60,6 @@ class EMMlFactorAnalysis(object):
             new_taus = np.diag(np.diag(cyy - B.dot(new_lambdas)))
 
         self.lambdas, self.taus = new_lambdas, new_taus
-
-    def set_initial(self):
-        """
-            set initial value of params
-        """
-        if self.num_fators != self.init_params["lambdas"].shape[0]:
-            raise Exception("number of factors does not match the dimension of loadings")
-
-        self.lambdas = self.init_params["lambdas"]
-        self.taus = self.init_params["taus"]
-        if self.type == "confirmatory":
-            self.factor_pattern = get_index_from_factor_pattern(self.init_params["factor_pattern"])
-        else:
-            self.factor_pattern = None
 
     def test_iterations(self, cyy):
         self.iterative_step(cyy)
