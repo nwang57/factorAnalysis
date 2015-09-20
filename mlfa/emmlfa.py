@@ -84,15 +84,15 @@ class EMMlFactorAnalysis(object):
 
         if self.plot:
             x = np.arange(0, self.iterations + 1)
-            plt.plot(x, np.log(lls), color='b')
+            plt.plot(x, lls, color='b')
             plt.xlabel('Iterations')
-            plt.ylabel('log(-f(betas, taus))')
+            plt.ylabel('LL')
             if self.type == "confirmatory":
                 plt.savefig(os.path.join('.', "confirmatory_EM.png"), bbox_inches="tight")
             else:
                 plt.savefig(os.path.join('.', "explore_EM.png"), bbox_inches="tight")
 
-        self.ll = lls
+        self.ll = np.array(lls)
 
 
 
@@ -119,9 +119,9 @@ if __name__ == "__main__":
                                               [1,1,1,1,0,0,0,0,0],
                                               [0,0,0,0,1,1,1,1,1]])
 
-    emmlfa = EMMlFactorAnalysis(4,100, init_params)
-    emmlfa.fit(cyy)
+    #emmlfa = EMMlFactorAnalysis(4,100, init_params)
+    #emmlfa.fit(cyy)
 
-    #confir = EMMlFactorAnalysis(4,100,init_params,fa_type="confirmatory")
-    #confir.fit(cyy)
+    confir = EMMlFactorAnalysis(4,100,init_params,fa_type="confirmatory")
+    confir.fit(cyy)
 

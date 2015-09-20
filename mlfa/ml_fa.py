@@ -46,7 +46,6 @@ class MlFactorAnalysis(object):
             new_lambdas = np.zeros(self.lambdas.shape)
             new_taus_array = np.zeros(len(self.taus))
             for j, pattern in enumerate(self.factor_pattern):
-                #pdb.set_trace()
                 for l_elem, pos in zip(K[pattern,j], pattern):
                     new_lambdas[:, j][pos] = l_elem
 
@@ -81,7 +80,7 @@ class MlFactorAnalysis(object):
 
         if self.plot:
             x = np.arange(0, self.iterations + 1)
-            plt.plot(x, np.log(lls), color='b')
+            plt.plot(x, lls, color='b')
             plt.xlabel('Iterations')
             plt.ylabel('log(-f(betas, taus))')
             if self.type == "confirmatory":
@@ -89,7 +88,7 @@ class MlFactorAnalysis(object):
             else:
                 plt.savefig(os.path.join('.', "explore_ML.png"), bbox_inches="tight")
 
-        self.ll = lls
+        self.ll = np.array(lls)
 
 
 if __name__ == "__main__":
@@ -115,8 +114,8 @@ if __name__ == "__main__":
                                               [1,1,1,1,0,0,0,0,0],
                                               [0,0,0,0,1,1,1,1,1]])
 
-    #mlfa = MlFactorAnalysis(4,100, init_params)
-    #mlfa.fit(cyy)
+    mlfa = MlFactorAnalysis(4,100, init_params)
+    mlfa.fit(cyy)
 
-    confir = MlFactorAnalysis(4,100, init_params, fa_type = "confirmatory")
-    confir.fit(cyy)
+    #confir = MlFactorAnalysis(4,100, init_params, fa_type = "confirmatory")
+    #confir.fit(cyy)
