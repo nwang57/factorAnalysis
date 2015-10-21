@@ -36,8 +36,10 @@ class TestEMMlfa:
         print "TEARDOWN"
 
     def test_exploratory(self):
-        l, t = self.emmlfa_ex.fit(self.cyy)
-        assert(abs(np.sum(self.emmlfa_ex.sig_tilt(l,t)) - np.sum(self.cyy)) < 0.104)
+        self.emmlfa_ex.fit(self.cyy)
+        l = self.emmlfa_ex.lambdas
+        t = self.emmlfa_ex.taus
+        assert(abs(np.sum(sig_tilt(l,t)) - np.sum(self.cyy)) < 1)
 
     def test_woodbury(self):
         res = woodbury(self.lambdas, self.taus)
@@ -45,5 +47,30 @@ class TestEMMlfa:
         assert_almost_equal(np.sum(res), np.sum(true), 10)
 
     def test_confirmatory(self):
-        l, t = self.emmlfa_cm.fit(self.cyy)
-        #assert(abs(np.sum(self.emmlfa_cm.sig_tilt(l,t)) - np.sum(self.cyy)) < 0.104)
+        self.emmlfa_cm.fit(self.cyy)
+        l = self.emmlfa_cm.lambdas
+        t = self.emmlfa_cm.taus
+        assert(abs(np.sum(sig_tilt(l,t)) - np.sum(self.cyy)) < 1)
+
+    def test_varimax(self):
+        test = np.array([[-0.21855 ,  0.908532, -0.32892 ,  0.136455],
+                      [ 0.841874, -0.36596 , -0.2355  , -0.31916 ],
+                      [ 0.830432,  0.383946, -0.2225  , -0.33684 ],
+                      [ 0.381244,  0.169304, -0.20553 ,  0.885294],
+                      [ 0.768423,  0.058657,  0.601702,  0.209855],
+                      [ 0.361017,  0.036609,  0.928671,  0.076788],
+                      [ 0.919046,  0.269187, -0.21876 , -0.18718 ],
+                      [ 0.971137,  0.049841,  0.163809,  0.166061],
+                      [ 0.334276, -0.82175 , -0.38167 ,  0.25945 ]])
+        expect = np.array([[ 0.09129682,  0.88933586, -0.34325038,  0.28797331],
+                        [ 0.80891817, -0.58100963,  0.05820452, -0.06850804],
+                        [ 0.98631709,  0.14231445,  0.08083308,  0.01976065],
+                        [ 0.10435783, -0.00513476,  0.0910481 ,  0.99034953],
+                        [ 0.40020067, -0.10117614,  0.87719403,  0.24521912],
+                        [-0.00140417,  0.02477792,  0.99722012, -0.07025541],
+                        [ 0.97714768,  0.00143377,  0.13723808,  0.1623131 ],
+                        [ 0.72024453, -0.2037375 ,  0.55082862,  0.36922558],
+                        [ 0.10306332, -0.92631601, -0.20016431,  0.30207721]])
+        result = varimax(test)
+        assert(abs(np.sum(result) - np.sum(expect)) < 0.1)
+
