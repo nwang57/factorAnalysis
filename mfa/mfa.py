@@ -4,6 +4,7 @@ from scipy import linalg
 import os
 import matplotlib.pyplot as plt
 
+
 class MixtureFA(object):
     """
         MixtureFA
@@ -67,13 +68,14 @@ class MixtureFA(object):
             self.H = self.H / np.vstack(Hrsum)
             #compute s
             s = np.sum(self.H, axis=0)
+            s2 = np.sum(s)
             # print(s)
 
             if self.iterations > 0 and ( lik - self.ll[-1] < self.tol ):
                 break
             #compute log likelihood
             self.ll.append(lik)
-
+            self.iterations += 1
 
             for j in xrange(self.n_mixtures):
                 lambdas = self.lambdas[j*self.n_var:(j+1)*self.n_var, :]
@@ -100,21 +102,33 @@ class MixtureFA(object):
                 self.lambdas[j*self.n_var:(j+1)*self.n_var, :] = l2[:,:self.n_factors]
                 self.mu[j, :] = l2[:, self.n_factors]
 
-                p1 = np.diag(l0.T.dot(X) - l2.dot(l1.T)) / self.sample_size
+                p1 = np.diag(l0.T.dot(X) - l2.dot(l1.T)) / s2
                 ph += p1
             self.phi = ph
-            self.pi = s / self.sample_size
-            self.iterations += 1
+            self.pi = s / s2
+
+
+    def plot_lik(self, file_name = None):
+        x = np.arange(self.iterations)
+        plt.xlabel('Iterations')
+        plt.ylabel('LL')
+        plt.plot(x, self.ll)
+        if file_name:
+            plt.savefig(os.path.join('.',"%s.png" % file_name), bbox_inches="tight")
+        else:
+            plt.show()
+        plt.close()
 
 if __name__ == "__main__":
     np.random.seed(5)
     X1 = np.random.multivariate_normal([0,0,0,0],np.eye(4),100)
     X2 = np.random.multivariate_normal([2,2,2,2],np.eye(4),200)
     X = np.vstack((X1, X2))
-    mfa = MixtureFA(2, 3)
+    mfa = MixtureFA(2, 2)
     mfa.fit(X)
     print(mfa.iterations)
-    print(mfa.pi)
+    print(mfa.mu)
+    mfa.plot_lik("mfa")
 
 
 

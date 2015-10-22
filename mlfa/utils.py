@@ -97,6 +97,17 @@ def load_stability_test_settings():
                         [1, 1, 2, 0, 0, 2, 0, 2, 1]])
     return lambdas.T, taus
 
+def plot_lik(ll, file_name = None):
+    x = np.arange(len(ll))
+    plt.xlabel('Iterations')
+    plt.ylabel('LL')
+    plt.plot(x, ll)
+    if file_name:
+        plt.savefig(os.path.join('.',"%s.png" % file_name), bbox_inches="tight")
+    else:
+        plt.show()
+    plt.close()
+
 def plot_comparison(ll1, ll2, file_name=None):
     if len(ll1) > len(ll2):
         max_len = len(ll1)
