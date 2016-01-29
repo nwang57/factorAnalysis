@@ -4,19 +4,151 @@
 		"selected_items":
 		[
 			[
-				"new",
-				"new_S_inv"
+				"mix",
+				"mixtures"
 			],
 			[
-				"new_",
-				"new_taus"
+				"sam",
+				"sample_sizes"
+			],
+			[
+				"pis",
+				"pis_diff"
+			],
+			[
+				"n",
+				"n_var"
+			],
+			[
+				"na",
+				"n_var"
+			],
+			[
+				"lam",
+				"lambdas"
+			],
+			[
+				"plo",
+				"plot_lik"
+			],
+			[
+				"cl",
+				"close"
+			],
+			[
+				"plt",
+				"plt"
+			],
+			[
+				"x",
+				"xlabel"
+			],
+			[
+				"H",
+				"Hrsum"
+			],
+			[
+				"va",
+				"vstack"
+			],
+			[
+				"zero",
+				"zero_idx"
+			],
+			[
+				"ph",
+				"phi"
+			],
+			[
+				"in",
+				"inv"
+			],
+			[
+				"Ezz",
+				"Ezz_aug"
+			],
+			[
+				"phi",
+				"phi_m"
+			],
+			[
+				"true",
+				"true_lambdas"
+			],
+			[
+				"emm",
+				"emmlfa_lam"
+			],
+			[
+				"ml",
+				"ml_lam"
+			],
+			[
+				"emml",
+				"emmlfa_iter"
+			],
+			[
+				"cyy",
+				"cyy_0"
+			],
+			[
+				"tau",
+				"taus_0"
+			],
+			[
+				"taus",
+				"taus_list"
+			],
+			[
+				"emma",
+				"emmlfa_lam_list"
+			],
+			[
+				"ml_lam",
+				"ml_lam_list"
+			],
+			[
+				"ml_me",
+				"ml_mean_lam"
+			],
+			[
+				"set",
+				"setting"
+			],
+			[
+				"no",
+				"noise_type"
+			],
+			[
+				"emmlfa_ta",
+				"emmlfa_taus_list"
+			],
+			[
+				"mar",
+				"marked2"
+			],
+			[
+				"ma",
+				"maked2"
+			],
+			[
+				"maked",
+				"maked1"
 			],
 			[
 				"fa",
-				"factor_pattern"
+				"fa_type"
 			],
 			[
-				"ini",
+				"new",
+				"new_taus"
+			],
+			[
+				"plot",
+				"plot_learning_curve"
+			],
+			[
+				"init",
 				"init_params"
 			],
 			[
@@ -24,20 +156,16 @@
 				"iterations"
 			],
 			[
-				"set",
-				"set_initial"
+				"new_",
+				"new_taus"
 			],
 			[
-				"taus",
-				"taus_inv"
+				"ini",
+				"init_params"
 			],
 			[
 				"num",
 				"num_fators"
-			],
-			[
-				"n",
-				"n_factors"
 			],
 			[
 				"min",
@@ -48,42 +176,66 @@
 	"buffers":
 	[
 		{
-			"file": "test/mlfa_test.py",
+			"file": "project/modules/simulate.py",
 			"settings":
 			{
-				"buffer_size": 751,
+				"buffer_size": 2023,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "mlfa/ml_fa.py",
+			"file": "project/mfa/mfa.py",
 			"settings":
 			{
-				"buffer_size": 2255,
+				"buffer_size": 6902,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "test/emmlfa_test.py",
+			"file": "/Users/nickwang/Downloads/mfa/mfa.m",
 			"settings":
 			{
-				"buffer_size": 2594,
+				"buffer_size": 3010,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "emmlfa/emmlfa.py",
+			"file": "project/mfa/mfa_experiment.py",
 			"settings":
 			{
-				"buffer_size": 3089,
+				"buffer_size": 3733,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "mlfa/utils.py",
+			"file": "project/mlfa/compare.py",
 			"settings":
 			{
-				"buffer_size": 652,
+				"buffer_size": 6701,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "utils.py",
+			"settings":
+			{
+				"buffer_size": 6093,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "result_seed0.txt",
+			"settings":
+			{
+				"buffer_size": 583,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "initial_value.txt",
+			"settings":
+			{
+				"buffer_size": 392,
 				"line_ending": "Unix"
 			}
 		}
@@ -94,6 +246,10 @@
 		"height": 362.0,
 		"selected_items":
 		[
+			[
+				"mk",
+				"Markdown Preview: Preview in Browser"
+			],
 			[
 				"mp",
 				"Markdown Preview: Preview in Browser"
@@ -124,6 +280,25 @@
 	},
 	"file_history":
 	[
+		"/Users/nickwang/Documents/Programs/stat_project/project/mfa/__init__.py",
+		"/Users/nickwang/Documents/Programs/python/project_init.md",
+		"/Users/nickwang/Documents/Programs/stat_project/test/mlfa_test.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/ml_fa.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/compare.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/mfa.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/mfa_experiment.py",
+		"/Users/nickwang/Documents/Programs/stat_project/project/modules/__init__.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/simulate.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/emmlfa.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/utils.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mfa/mfa.py",
+		"/Users/nickwang/Documents/Programs/stat_project/test/simulate_test.py",
+		"/Users/nickwang/Documents/Programs/stat_project/test/emmlfa_test.py",
+		"/Users/nickwang/Documents/Programs/stat_project/__init__.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mfa/simulate.py",
+		"/Users/nickwang/Documents/Programs/stat_project/mlfa/pca.py",
+		"/Users/nickwang/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/nickwang/Documents/Programs/stat_project/emmlfa/emmlfa.py",
 		"/Users/nickwang/Documents/Programs/stat_project/emmlfa.py",
 		"/Users/nickwang/Documents/Programs/stat_project/ml_fa.py",
 		"/Users/nickwang/Documents/Programs/python/projects/genre/svm_classifier.py",
@@ -145,9 +320,17 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"csv",
+			"H",
+			"pi_m",
+			"emml_lam_list",
+			"cyy",
+			"tau",
+			"q",
+			"100",
 			"if",
 			"self.woodbury",
 			"woodbury",
@@ -172,28 +355,27 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "test/mlfa_test.py",
+					"file": "project/modules/simulate.py",
 					"settings":
 					{
-						"buffer_size": 751,
+						"buffer_size": 2023,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								135,
-								751
+								634,
+								634
 							]
 						],
 						"settings":
 						{
-							"_anf_new": "",
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -206,18 +388,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "mlfa/ml_fa.py",
+					"file": "project/mfa/mfa.py",
 					"settings":
 					{
-						"buffer_size": 2255,
+						"buffer_size": 6902,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								63,
-								63
+								1024,
+								1024
 							]
 						],
 						"settings":
@@ -226,94 +408,171 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 7.0,
-						"translation.y": 0.0,
+						"translation.x": 739.0,
+						"translation.y": 498.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "test/emmlfa_test.py",
+					"file": "/Users/nickwang/Downloads/mfa/mfa.m",
 					"settings":
 					{
-						"buffer_size": 2594,
+						"buffer_size": 3010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1415,
-								1415
-							],
-							[
-								2021,
-								2021
+								894,
+								894
 							]
 						],
 						"settings":
 						{
-							"_anf_new": "",
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Objective-C/Objective-C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 255.0,
+						"translation.y": 467.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "emmlfa/emmlfa.py",
+					"file": "project/mfa/mfa_experiment.py",
 					"settings":
 					{
-						"buffer_size": 3089,
+						"buffer_size": 3733,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2143,
-								2143
+								2620,
+								2689
 							]
 						],
 						"settings":
 						{
-							"_anf_new": "",
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 858.0,
+						"translation.y": 229.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "mlfa/utils.py",
+					"file": "project/mlfa/compare.py",
 					"settings":
 					{
-						"buffer_size": 652,
+						"buffer_size": 6701,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								81,
-								81
+								4786,
+								4836
 							]
 						],
 						"settings":
 						{
-							"_anf_new": "",
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 1.0,
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "utils.py",
+					"settings":
+					{
+						"buffer_size": 6093,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								947,
+								947
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "result_seed0.txt",
+					"settings":
+					{
+						"buffer_size": 583,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								582,
+								582
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "initial_value.txt",
+					"settings":
+					{
+						"buffer_size": 392,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								194,
+								194
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -364,6 +623,30 @@
 		"selected_items":
 		[
 			[
+				"ut",
+				"mlfa/utils.py"
+			],
+			[
+				"mfa",
+				"mlfa/mfa.py"
+			],
+			[
+				"si",
+				"mfa/simulate.py"
+			],
+			[
+				"com",
+				"mlfa/compare.py"
+			],
+			[
+				"u",
+				"mlfa/utils.py"
+			],
+			[
+				"simu",
+				"test/simulate_test.py"
+			],
+			[
 				"read",
 				"README.md"
 			],
@@ -406,6 +689,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 125.0,
 	"status_bar_visible": true
 }
