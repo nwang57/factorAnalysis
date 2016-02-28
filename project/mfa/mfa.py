@@ -27,7 +27,7 @@ class MixtureFA(object):
         self.tol = 1E-4
         self.iterations = 0
 
-    def setup_params(self, X, seed=5):
+    def setup_params(self, X, seed=5, save_init=False):
         self.sample_size = X.shape[0]
         self.n_var = X.shape[1]
         cov = np.cov(X.T)
@@ -38,15 +38,16 @@ class MixtureFA(object):
         self.pi = np.ones(self.n_mixtures) / self.n_mixtures
         self.mu = np.random.normal(size = self.n_mixtures * self.n_var).reshape(self.n_mixtures, self.n_var).dot(linalg.sqrtm(cov)) + np.ones((self.n_mixtures, 1)).dot(np.mean(X, axis=0).reshape(1,self.n_var))
         self.H = np.zeros((self.sample_size, self.n_mixtures))
-        with open(os.path.join('.','initial_value.txt'), 'w') as outfile:
-            outfile.write("Initial MU\n")
-            outfile.write(np.array2string(self.mu, separator=',') + '\n')
-            outfile.write("Initial lambdas\n")
-            outfile.write(np.array2string(self.lambdas, separator=',') + '\n')
-            outfile.write("Initial phi\n")
-            outfile.write(np.array2string(self.phi, separator=',') + '\n')
-            outfile.write("Initial pi\n")
-            outfile.write(np.array2string(self.pi, separator=',') + '\n')
+        if save_init:
+            with open(os.path.join('.','initial_value.txt'), 'w') as outfile:
+                outfile.write("Initial MU\n")
+                outfile.write(np.array2string(self.mu, separator=',') + '\n')
+                outfile.write("Initial lambdas\n")
+                outfile.write(np.array2string(self.lambdas, separator=',') + '\n')
+                outfile.write("Initial phi\n")
+                outfile.write(np.array2string(self.phi, separator=',') + '\n')
+                outfile.write("Initial pi\n")
+                outfile.write(np.array2string(self.pi, separator=',') + '\n')
 
     def fit(self, X, cyc = 100,seed=5):
         np.random.seed(seed)
@@ -163,6 +164,16 @@ class MixtureFA(object):
         """ln(sample size) * (number of estimated parameters) - 2*ln(max likelihood)"""
         return np.log(self.sample_size) * self.number_of_parameters() - 2*self.ll[-1]
 
+    def save_estimates(self, file_name):
+        with open(os.path.join('.','estimates_%s.txt' % file_name), 'w') as outfile:
+            outfile.write("MU\n")
+            outfile.write(np.array2string(self.mu, separator=',') + '\n')
+            outfile.write("lambdas\n")
+            outfile.write(np.array2string(self.lambdas, separator=',') + '\n')
+            outfile.write("phi\n")
+            outfile.write(np.array2string(self.phi, separator=',') + '\n')
+            outfile.write("pi\n")
+            outfile.write(np.array2string(self.pi, separator=',') + '\n')
 
 if __name__ == "__main__":
     std = np.sqrt([0.1,0.1,0.1,0.1])

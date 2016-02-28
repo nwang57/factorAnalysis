@@ -16,7 +16,7 @@ class MFACluster(object):
         ratio : size of training set, default 30% for validation
     """
 
-    def __init__(self, obs, max_k,n_factors, iters=10,ratio=0.35):
+    def __init__(self, obs, max_k,n_factors,label, iters=10,ratio=0.35):
         self.obs = obs
         self.n_obs = obs.shape[0]
         self.max_k = max_k
@@ -24,12 +24,13 @@ class MFACluster(object):
         self.n_factors = n_factors
         self.m = int(ratio * self.n_obs)
         self.result_matrix = np.zeros((self.n_iters, self.max_k-1))
+        self.label = label
 
     def fit(self):
         iteration = 0
         permu_list = range(self.n_obs)
         for iteration in xrange(self.n_iters):
-            m1_data, m2_data, validation = self._split_data(permu_list)
+            m1_data, m2_data, validation, m1_label, m2_label, val_label = self._split_data(permu_list)
             # paralle model fit?
             for k in xrange(2,self.max_k+1):
                 print("%d's iteration with k=%d" % (iteration, k))
@@ -38,6 +39,13 @@ class MFACluster(object):
                 m2 = MixtureFA(k, self.n_factors)
                 m2.fit(m2_data)
                 self.result_matrix[iteration, k-2] = self._mismatch(m1, m2, validation)
+
+
+    def _label_ratio(self, m1_index, m2_index, validate_index):
+        m1_label = np.unique(self.label[m1_index], return_counts=True)
+        m2_label = np.unique(self.label[m2_index], return_counts=True)
+        val_label = np.unique(self.label[validate_index], return_counts=True)
+        return m1_label, m2_label, val_label
 
     def _split_data(self, permu_list):
         """random split the data into 3 groups, 1st and 2nd for modeling with size m,
@@ -50,7 +58,8 @@ class MFACluster(object):
         m1_data = self.obs[m1_index,:]
         m2_data = self.obs[m2_index,:]
         validation_data = self.obs[validate_index,:]
-        return m1_data, m2_data, validation_data
+        m1_label, m2_label, val_label = self._label_ratio(m1_index, m2_index, validate_index)
+        return m1_data, m2_data, validation_data, m1_label, m2_label, val_label
 
     def _mismatch(self, m1, m2, validation):
         """for each split and k, calculate number of disagreement between 2 models"""
@@ -63,7 +72,8 @@ class MFACluster(object):
 
     def best_k(self, method):
         if method == "voting":
-            ind, counts = np.unique(np.argmin(self.result_matrix, axis=1), return_counts=True)
+            # if this is a tie of minimum distance, then larger group will be choosed.
+            ind, counts = np.unique(self.result_matrix.shape[1]-1-np.argmin(np.fliplr(self.result_matrix), axis=1), return_counts=True)
             return ind[np.argmax(counts)] + 2
         elif method == "averaging":
             return np.argmin(np.mean(self.result_matrix, axis=0)) + 2

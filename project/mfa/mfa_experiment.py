@@ -56,7 +56,7 @@ def sample_generator(iters, p, size):
     """
     for i in xrange(iters):
         X, Y = get_sample(size, p, i)
-        yield X, cal_ratio(Y)
+        yield X, Y
 
 def mfa_experiment(n_mixtures, output=False):
     p = [0.1, 0.3, 0.6]
@@ -113,14 +113,15 @@ def cluster_experiment():
     n_factors = 1
     res = {'cv':np.zeros(max_k-1),'ca':np.zeros(max_k-1),'cstd':np.zeros(max_k-1),'aic':np.zeros(max_k-1),'bic':np.zeros(max_k-1)}
     result_list = []
-    count = 51
-    distance_dist = np.zeros((1, max_k-1))
-    for X, ratio in sample_generator(1, p, 100):
+    count = 100
+    distance_dist = np.zeros((1, max_k-1),dtype=int)
+    for X, Y in sample_generator(2, p, 600):
+        print count
         result = {'id':count}
         # recorde the input data
-        np.savetxt("intput_data_%d.csv" % count, X, delimiter=',')
+        # np.savetxt("intput_data_%d.csv" % count, X, delimiter=',')
         # fit mfa model with validation
-        mfa_cluster = MFACluster(X,max_k,n_factors,iters=5)
+        mfa_cluster = MFACluster(X,max_k,n_factors,Y,iters=10)
         mfa_cluster.fit()
         res['cv'][mfa_cluster.best_k("voting")-2] += 1
         res['ca'][mfa_cluster.best_k("averaging")-2] += 1
@@ -132,6 +133,7 @@ def cluster_experiment():
         distance_dist = np.vstack((distance_dist, mfa_cluster.result_matrix))
 
         # fit mfa model to whole dataset with aic and bic
+
         min_aic = min_bic = sys.maxint
         k_aic = k_bic = 0
         for k in xrange(2, max_k+1):
@@ -150,17 +152,18 @@ def cluster_experiment():
         res['bic'][k_bic-2] += 1
         result['aic'] = k_aic
         result['bic'] = k_bic
+
         # collect result
         # save iter number, likelihood_k, aic_k, bic_k, cv, ca, cstd into csv file
         result_list.append(result)
         count += 1
     save_dict_to_csv(result_list)
-    np.savetxt("distance_dist.csv", distance_dist, delimiter=',')
+    np.savetxt(os.path.join('.','result',"distance_dist.csv"), distance_dist, delimiter=',')
     print res
 
 
 def save_dict_to_csv(result_list):
-    with open("result.csv",'wb') as f:
+    with open(os.path.join('.','result',"result2.csv"),'wb') as f:
         writer = csv.DictWriter(f, result_list[0].keys())
         writer.writeheader()
         for result in result_list:
