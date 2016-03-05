@@ -160,7 +160,7 @@ def cluster_experiment():
     np.savetxt(os.path.join('.','result',"distance_dist.csv"), distance_dist, delimiter=',')
     print res
 
-def cluster_simulation(ids, seed):
+def cluster_simulation(ids):
     """This will run single simulation with seed and id arguments.
     The result will be serialized into 2 pickle files, one distance matrix and the other one for detailed result
     """
@@ -168,7 +168,10 @@ def cluster_simulation(ids, seed):
     max_k = 5
     n_factors = 1
     result = {'id':ids}
-    for X, Y in sample_generator(1, p, 100, seed = seed):
+    seeds = cPickle.load(open('seeds.p','r'))
+    seed = seeds[ids]
+    print seed
+    for X, Y in sample_generator(1, p, 600, seed = seed):
         mfa_cluster = MFACluster(X,max_k,n_factors,Y,iters=10)
         mfa_cluster.fit()
         result['cv'] = mfa_cluster.best_k("voting")
@@ -204,10 +207,9 @@ def save_dict_to_csv(result_list):
 def set_up_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("ids", help="the identification number for this simulation", type=int)
-    parser.add_argument("seed", help="the seed that is used to generate the sample data", type=int)
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = set_up_arguments()
-    cluster_simulation(args.ids,args.seed)
+    cluster_simulation(args.ids)

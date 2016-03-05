@@ -3,6 +3,12 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 import os
 
+def generate_random_seed(size):
+    np.random.seed(-1)
+    seeds = list(set(np.random.random_integers(0, 1E5, size=600)))
+    if len(seeds) >= 500:
+        return seeds[:500]
+
 def woodbury(lambdas, taus):
     '''
         woodbury identity transformation for inv(taus + transpose(lambdas)*lambdas)
