@@ -8,6 +8,7 @@ import os
 import numpy as np
 import csv
 import cPickle
+import argparse
 
 """
     what if we fit a 2 mixtures?
@@ -200,5 +201,13 @@ def save_dict_to_csv(result_list):
         for result in result_list:
             writer.writerow(result)
 
+def set_up_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("ids", help="the identification number for this simulation", type=int)
+    parser.add_argument("seed", help="the seed that is used to generate the sample data", type=int)
+    args = parser.parse_args()
+    return args
+
 if __name__ == "__main__":
-    cluster_simulation(1,6)
+    args = set_up_arguments()
+    cluster_simulation(args.ids,args.seed)
