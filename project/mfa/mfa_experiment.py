@@ -194,8 +194,8 @@ def cluster_simulation(ids):
                 min_bic = m.bic()
         result['aic'] = k_aic
         result['bic'] = k_bic
-    cPickle.dump(result, open("pickle/%s_result.p" % ids, 'w'))
-    cPickle.dump(mfa_cluster.result_matrix, open("pickle/%s_matrix.p" % ids, 'w'))
+    cPickle.dump(result, open("pickle/%s_result.p" % ids, 'wb'))
+    cPickle.dump(mfa_cluster.result_matrix, open("pickle/%s_matrix.p" % ids, 'wb'))
 
 def save_dict_to_csv(result_list):
     with open(os.path.join('.','result',"result2.csv"),'wb') as f:
