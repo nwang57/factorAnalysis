@@ -1,7 +1,6 @@
 report/
 result/
 input/
-pickle/
 .DS_Store
 *.png
 *.txt

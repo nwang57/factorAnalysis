@@ -170,7 +170,7 @@ def cluster_simulation(ids):
     result = {'id':ids}
     seeds = cPickle.load(open('seeds.p','r'))
     seed = seeds[ids]
-    print seed
+    print("Using seed %s" % seed)
     for X, Y in sample_generator(1, p, 600, seed = seed):
         mfa_cluster = MFACluster(X,max_k,n_factors,Y,iters=10)
         mfa_cluster.fit()
