@@ -10,38 +10,60 @@ import csv
 import cPickle
 import argparse
 
+
 """
     what if we fit a 2 mixtures?
 """
+def plot_3d(data1, data2, data3, data4):
+    from mpl_toolkits.mplot3d import Axes3D
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    color = ['r','b','k','y']
+    for ind, data in enumerate([data1, data2, data3, data4]):
+        ax.scatter(data[:,0], data[:,1], data[:,2], c=color[ind], marker='.')
+
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    plt.show()
+
 def load_params():
     mu = np.array([0,0,0])
     lambdas = np.array([[1,1,1]])
     taus = np.sqrt([0.1,0.1,0.1])
     return mu, lambdas.T, taus
 
-def get_sample(n_obs, p, seed = 5):
+def get_sample(n_obs, p, seed = 5, plot=False):
     """
-        create 1000 obs with 3 mixtures of ratio 1:3:6
+        create obs with 3 mixtures of ratio p
     """
     sample_sizes = get_indices(n_obs, p, seed)
     print(sample_sizes)
     n1 = sample_sizes[0]
     n2 = sample_sizes[1]
     n3 = sample_sizes[2]
+    n4 = sample_sizes[3]
     mu, lambdas, std = load_params()
-    fm1 = FactorModel(n1, lambdas, std, mu=mu, seed=seed)
-    fm2 = FactorModel(n2, lambdas, std, mu=mu + 10, seed=seed)
-    fm3 = FactorModel(n3, lambdas, std, mu=mu + 20, seed=seed)
+    k = 5
+    fm1 = FactorModel(n1, lambdas, std, mu=mu + k * np.array([1,0,0]), seed=seed)
+    fm2 = FactorModel(n2, lambdas, std, mu=mu + k * np.array([-1/2,np.sqrt(3)/2,0]), seed=seed)
+    fm3 = FactorModel(n3, lambdas, std, mu=mu + k * np.array([-1/2,-np.sqrt(3)/2,0]), seed=seed)
+    fm4 = FactorModel(n4, lambdas, std, mu=mu + k * np.array([0,0,np.sqrt(2)]), seed=seed)
     fm1.simulate()
     fm2.simulate()
     fm3.simulate()
-    Y = [1] * n1 + [2] * n2 + [3] * n3
-    return np.vstack((fm1.obs, fm2.obs, fm3.obs)), np.array(Y)
+    fm4.simulate()
+    Y = [1] * n1 + [2] * n2 + [3] * n3 + [4] * n4
+    if plot:
+        plot_3d(fm1.obs, fm2.obs, fm3.obs, fm4.obs)
+    return np.vstack((fm1.obs, fm2.obs, fm3.obs, fm4.obs)), np.array(Y)
 
 def get_indices(n_obs, p, seed):
     """generate sample sizes for the 3 mixtures according to the predefined proportions"""
     np.random.seed(seed)
-    com_id, sample_sizes = np.unique(np.random.choice(3, n_obs, p=p),return_counts=True)
+    com_id, sample_sizes = np.unique(np.random.choice(len(p), n_obs, p=p),return_counts=True)
     return sample_sizes
 
 def cal_ratio(label):
@@ -164,15 +186,15 @@ def cluster_simulation(ids):
     """This will run single simulation with seed and id arguments.
     The result will be serialized into 2 pickle files, one distance matrix and the other one for detailed result
     """
-    p = [0.33,0.33,0.34]
+    p = [0.25,0.25,0.25,0.25]
     max_k = 5
     n_factors = 1
     result = {'id':ids}
     seeds = cPickle.load(open('seeds.p','r'))
     seed = seeds[ids]
     print("Using seed %s" % seed)
-    for X, Y in sample_generator(1, p, 600, seed = seed):
-        mfa_cluster = MFACluster(X,max_k,n_factors,Y,iters=10)
+    for X, Y in sample_generator(1, p, 100, seed = seed):
+        mfa_cluster = MFACluster(X,max_k,n_factors,Y,iters=5)
         mfa_cluster.fit()
         result['cv'] = mfa_cluster.best_k("voting")
         result['ca'] = mfa_cluster.best_k("averaging")
@@ -194,8 +216,10 @@ def cluster_simulation(ids):
                 min_bic = m.bic()
         result['aic'] = k_aic
         result['bic'] = k_bic
-    cPickle.dump(result, open("pickle/%s_result.p" % ids, 'wb'))
-    cPickle.dump(mfa_cluster.result_matrix, open("pickle/%s_matrix.p" % ids, 'wb'))
+    print result
+    print mfa_cluster.result_matrix
+    # cPickle.dump(result, open("pickle/%s_result.p" % ids, 'wb'))
+    # cPickle.dump(mfa_cluster.result_matrix, open("pickle/%s_matrix.p" % ids, 'wb'))
 
 def save_dict_to_csv(result_list):
     with open(os.path.join('.','result',"result2.csv"),'wb') as f:

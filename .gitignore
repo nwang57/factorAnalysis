@@ -1,6 +1,7 @@
 report/
 result/
 input/
+tmp/
 .DS_Store
 *.png
 *.txt

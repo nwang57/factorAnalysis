@@ -76,7 +76,7 @@ class MFACluster(object):
             ind, counts = np.unique(self.result_matrix.shape[1]-1-np.argmin(np.fliplr(self.result_matrix), axis=1), return_counts=True)
             return ind[np.argmax(counts)] + 2
         elif method == "averaging":
-            return np.argmin(np.mean(self.result_matrix, axis=0)) + 2
+            return self.result_matrix.shape[1]-1-np.argmin(np.mean(self.result_matrix, axis=0)[::-1]) + 2
         elif method == "std":
             std = np.std(self.result_matrix, axis=0)
             mean = np.mean(self.result_matrix, axis=0)
