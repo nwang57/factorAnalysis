@@ -21,8 +21,9 @@ def plot_3d(data1, data2, data3):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     color = ['r','b','k','y']
+    marker = ['.', 's', 'v']
     for ind, data in enumerate([data1, data2, data3]):
-        ax.scatter(data[:,0], data[:,1], data[:,2], c=color[ind], marker='.')
+        ax.scatter(data[:,0], data[:,1], data[:,2], c=color[ind], marker=marker[ind])
 
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
@@ -32,7 +33,7 @@ def plot_3d(data1, data2, data3):
 def load_params():
     mu = np.array([0,0,0])
     lambdas = np.array([[1,1,1]])
-    taus = np.sqrt([1.,1.,1.])
+    taus = np.sqrt([0.1,0.1,0.1])
     return mu, lambdas.T, taus
 
 def get_sample(n_obs, p, seed = 5, plot=False):
@@ -47,8 +48,8 @@ def get_sample(n_obs, p, seed = 5, plot=False):
     mu, lambdas, std = load_params()
 
     fm1 = FactorModel(n1, lambdas, std, mu=mu + np.array([0,0,0]), seed=seed)
-    fm2 = FactorModel(n2, lambdas, std, mu=mu + np.array([4,0,0]), seed=seed)
-    fm3 = FactorModel(n3, lambdas, std, mu=mu + np.array([2,10,0]), seed=seed)
+    fm2 = FactorModel(n2, lambdas, std, mu=mu + np.array([3,0,0]), seed=seed)
+    fm3 = FactorModel(n3, lambdas, std, mu=mu + np.array([1.5,2.6,0]), seed=seed)
     fm1.simulate()
     fm2.simulate()
     fm3.simulate()
@@ -230,6 +231,6 @@ def set_up_arguments():
     return args
 
 if __name__ == "__main__":
-    args = set_up_arguments()
-    cluster_simulation(args.ids)
-    # get_sample(200,[0.33,0.33,0.34],plot=True)
+    # args = set_up_arguments()
+    # cluster_simulation(args.ids)
+    get_sample(200,[0.33,0.33,0.34],plot=True)

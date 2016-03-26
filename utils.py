@@ -189,11 +189,12 @@ def adjust_sign(lam_list):
     return new_lam_list
 
 def load_pickle_file(dir_path):
+    file_suffix = dir_path.split('/')[-1]
     result_list = []
     for fn in glob.glob(os.path.join(dir_path, '*_result.p')):
         result_list.append(cPickle.load(open(fn, 'r')))
 
-    with open(os.path.join('.','result',"result_4_mixtures.csv"),'wb') as f:
+    with open(os.path.join('.','result',"result_%s.csv" % file_suffix),'wb') as f:
         writer = csv.DictWriter(f, result_list[0].keys())
         writer.writeheader()
         for result in result_list:
@@ -203,9 +204,9 @@ def load_pickle_file(dir_path):
     for fn in glob.glob(os.path.join(dir_path, '*_matrix.p')):
         result_matrix = cPickle.load(open(fn,'r'))
         distance_dist = np.vstack((distance_dist, result_matrix))
-    np.savetxt(os.path.join('.','result',"4_mixtures_distance_dist.csv"), distance_dist, delimiter=',')
+    np.savetxt(os.path.join('.','result',"%s_distance_dist.csv" % file_suffix), distance_dist, delimiter=',')
 
 if __name__=="__main__":
-    dir_path = '/Users/nickwang/Documents/Programs/pickle_files/4-mixtures'
+    dir_path = '/Users/nickwang/Documents/Programs/pickle_files/3_distinct'
     load_pickle_file(dir_path)
 
